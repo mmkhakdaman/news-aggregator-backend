@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,3 +27,14 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 });
+
+Route::get('/search', [ArticleController::class, 'search']);
+Route::get('/sources', [ArticleController::class, 'sources']);
+Route::get('/categories', [ArticleController::class, 'categories']);
+Route::get('/authors', [ArticleController::class, 'authors']);
+
+
+Route::get('/feed', [ArticleController::class, 'feed']);
+
+// update user feed
+Route::middleware('auth:sanctum')->post('/feed', [UserController::class, 'updateFeed']);
