@@ -76,7 +76,8 @@ class ArticleController extends Controller
             $results = array_merge($results, app($class)->getSources());
         }
 
-        $results = array_values(array_map("unserialize", array_unique(array_map("serialize", $results))));
+
+        $results = collect($results)->unique('id')->values()->all();
 
         return response()->json($results);
     }
@@ -89,7 +90,7 @@ class ArticleController extends Controller
             $results = array_merge($results, app($class)->getCategories());
         }
 
-        $results = array_values(array_map("unserialize", array_unique(array_map("serialize", $results))));
+        $results = collect($results)->unique('id')->values()->all();
 
         return response()->json($results);
     }
