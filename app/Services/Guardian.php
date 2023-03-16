@@ -80,26 +80,30 @@ class Guardian implements ArticelIterface
 
     public function get(): array
     {
-        if (!empty($this->filter['source'])) {
-            return [];
+        try {
+            if (!empty($this->filter['source'])) {
+                return [];
+            }
+
+            $request = Http::get("$this->apiUrl/search", $this->filter);
+
+            $results = $request->json()['response']['results'];
+
+            $results = array_map(function ($result) {
+                return [
+                    'title' => $result['webTitle'],
+                    'url' => $result['webUrl'],
+                    'source' => 'Guardian',
+                    'author' => $result['fields']['byline'] ?? '',
+                    'category' => $result['sectionName'],
+                    'published_at' => Carbon::parse($result['webPublicationDate'])->format('Y-m-d'),
+                ];
+            }, $results);
+
+            return $results;
+        } catch (\Exception $e) {
+            $results = [];
         }
-
-        $request = Http::get("$this->apiUrl/search", $this->filter);
-
-        $results = $request->json()['response']['results'];
-
-        $results = array_map(function ($result) {
-            return [
-                'title' => $result['webTitle'],
-                'url' => $result['webUrl'],
-                'source' => 'Guardian',
-                'author' => $result['fields']['byline'] ?? '',
-                'category' => $result['sectionName'],
-                'published_at' => Carbon::parse($result['webPublicationDate'])->format('Y-m-d'),
-            ];
-        }, $results);
-
-        return $results;
     }
 
     public function search(): array

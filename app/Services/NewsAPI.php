@@ -71,42 +71,50 @@ class NewsAPI implements ArticelIterface
 
     public function search(): array
     {
-        $request = Http::get("$this->apiUrl/everything", $this->filter);
+        try {
+            $request = Http::get("$this->apiUrl/everything", $this->filter);
 
-        $results = $request->json()['articles'];
+            $results = $request->json()['articles'];
 
-        $results = array_map(function ($result) {
-            return [
-                'title' => $result['title'],
-                'url' => $result['url'],
-                'source' => $result['source']['name'] ?? '',
-                'author' => $result['author'] ?? '',
-                'category' => $result['category'] ?? '',
-                'published_at' => Carbon::parse($result['publishedAt'])->format('Y-m-d'),
-            ];
-        }, $results);
+            $results = array_map(function ($result) {
+                return [
+                    'title' => $result['title'],
+                    'url' => $result['url'],
+                    'source' => $result['source']['name'] ?? '',
+                    'author' => $result['author'] ?? '',
+                    'category' => $result['category'] ?? '',
+                    'published_at' => Carbon::parse($result['publishedAt'])->format('Y-m-d'),
+                ];
+            }, $results);
 
-        return $results;
+            return $results;
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 
     public function get(): array
     {
-        $request = Http::get("$this->apiUrl/top-headlines", $this->filter);
+        try {
+            $request = Http::get("$this->apiUrl/top-headlines", $this->filter);
 
-        $results = $request->json()['articles'];
+            $results = $request->json()['articles'];
 
-        $results = array_map(function ($result) {
-            return [
-                'title' => $result['title'],
-                'url' => $result['url'],
-                'source' => $result['source']['name'] ?? '',
-                'author' => $result['author'] ?? '',
-                'category' => $result['category'] ?? '',
-                'published_at' => Carbon::parse($result['publishedAt'])->format('Y-m-d'),
-            ];
-        }, $results);
+            $results = array_map(function ($result) {
+                return [
+                    'title' => $result['title'],
+                    'url' => $result['url'],
+                    'source' => $result['source']['name'] ?? '',
+                    'author' => $result['author'] ?? '',
+                    'category' => $result['category'] ?? '',
+                    'published_at' => Carbon::parse($result['publishedAt'])->format('Y-m-d'),
+                ];
+            }, $results);
 
-        return $results;
+            return $results;
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 
     public function getSources(): array
