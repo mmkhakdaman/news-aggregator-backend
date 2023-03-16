@@ -126,19 +126,23 @@ class Guardian implements ArticelIterface
 
     public function getCategories(): array
     {
-        $request = Http::get("$this->apiUrl/sections", $this->params);
+        try {
+            $request = Http::get("$this->apiUrl/sections", $this->params);
 
-        $results = $request->json()['response']['results'];
+            $results = $request->json()['response']['results'];
 
-        $results = array_map(function ($result) {
-            return [
-                'id' => $result['id'],
-                'name' => $result['webTitle'],
-                // 'source' => self::class
-            ];
-        }, $results);
+            $results = array_map(function ($result) {
+                return [
+                    'id' => $result['id'],
+                    'name' => $result['webTitle'],
+                    // 'source' => self::class
+                ];
+            }, $results);
 
-        return $results;
+            return $results;
+        } catch (\Exception $e) {
+            $results = [];
+        }
     }
 
     public function getAuthors(): array

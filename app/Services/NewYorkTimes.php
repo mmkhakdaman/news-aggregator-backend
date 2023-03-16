@@ -134,22 +134,27 @@ class NewYorkTimes implements ArticelIterface
 
     public function getCategories(): array
     {
-        $request = Http::get(
-            "https://api.nytimes.com/svc/news/v3/content/section-list.json",
-            $this->filter
-        );
+        try {
 
-        $results = $request->json()['results'];
+            $request = Http::get(
+                "https://api.nytimes.com/svc/news/v3/content/section-list.json",
+                $this->filter
+            );
 
-        $results = array_map(function ($result) {
-            return [
-                'id' => $result['section'],
-                'name' => $result['display_name'],
-                // 'source' => self::class,
-            ];
-        }, $results);
+            $results = $request->json()['results'];
 
-        return $results;
+            $results = array_map(function ($result) {
+                return [
+                    'id' => $result['section'],
+                    'name' => $result['display_name'],
+                    // 'source' => self::class,
+                ];
+            }, $results);
+
+            return $results;
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 
     public function getAuthors(): array

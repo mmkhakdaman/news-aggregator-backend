@@ -119,40 +119,49 @@ class NewsAPI implements ArticelIterface
 
     public function getSources(): array
     {
-        $request = Http::get("$this->apiUrl/top-headlines/sources", $this->params);
+        try {
+            $request = Http::get("$this->apiUrl/top-headlines/sources", $this->params);
 
-        $results = $request->json()['sources'];
+            $results = $request->json()['sources'];
 
-        $results = array_map(function ($result) {
-            return [
-                'id' => $result['id'],
-                'name' => $result['name'],
-                // 'source' => self::class,
-            ];
-        }, $results);
+            $results = array_map(function ($result) {
+                return [
+                    'id' => $result['id'],
+                    'name' => $result['name'],
+                    // 'source' => self::class,
+                ];
+            }, $results);
 
-        return $results;
+            return $results;
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 
     public function getCategories(): array
     {
-        $request = Http::get("$this->apiUrl/top-headlines/sources", $this->params);
+        try {
 
-        $results = $request->json()['sources'];
+            $request = Http::get("$this->apiUrl/top-headlines/sources", $this->params);
 
-        $results = array_map(function ($result) {
-            return $result['category'];
-        }, $results);
+            $results = $request->json()['sources'];
 
-        $results = array_map(function ($result) {
-            return [
-                'id' => $result,
-                'name' => $result,
-                // 'source' => self::class
-            ];
-        }, array_unique($results));
+            $results = array_map(function ($result) {
+                return $result['category'];
+            }, $results);
 
-        return $results;
+            $results = array_map(function ($result) {
+                return [
+                    'id' => $result,
+                    'name' => $result,
+                    // 'source' => self::class
+                ];
+            }, array_unique($results));
+
+            return $results;
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 
     public function getAuthors(): array
